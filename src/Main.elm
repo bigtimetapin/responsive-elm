@@ -3,12 +3,14 @@ module Main exposing (main)
 -- MAIN
 
 import Browser
-import Browser.Dom
 import Element exposing (Element)
 import Element.Background as Background
 import Element.Font as Font
 import Html exposing (Html)
-import Task exposing (Task)
+import Model.Model as Model exposing (Model)
+import Model.WindowSize exposing (WindowSize)
+import Msg.Msg exposing (Msg(..))
+import State.State exposing (State(..))
 
 
 main : Program () Model Msg
@@ -21,52 +23,9 @@ main =
         }
 
 
-
--- MODEL
-
-
-type alias Model =
-    { state : State
-    , windowSize : Maybe WindowSize
-    }
-
-
-type alias WindowSize =
-    { width : Float
-    , height : Float
-    }
-
-
-type State
-    = LandingPage
-
-
-type Msg
-    = NewWindowSize (Maybe WindowSize)
-
-
 init : () -> ( Model, Cmd Msg )
 init _ =
-    let
-        handle : Result x Browser.Dom.Viewport -> Msg
-        handle result =
-            case result of
-                Ok viewport ->
-                    NewWindowSize
-                        (Just
-                            { width = viewport.viewport.width
-                            , height = viewport.viewport.height
-                            }
-                        )
-
-                Err _ ->
-                    NewWindowSize Nothing
-    in
-    ( { state = LandingPage
-      , windowSize = Nothing
-      }
-    , Task.attempt handle Browser.Dom.getViewport
-    )
+    Model.init
 
 
 
