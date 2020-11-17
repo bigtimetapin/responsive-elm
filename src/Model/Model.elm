@@ -1,7 +1,7 @@
 module Model.Model exposing (Model, init)
 
 import Browser.Dom
-import Model.WindowSize exposing (WindowSize)
+import Model.WindowSize as WindowSize exposing (WindowSize)
 import Msg.Msg exposing (Msg(..))
 import State.State exposing (State(..))
 import Task
@@ -22,9 +22,10 @@ init =
                 Ok viewport ->
                     NewWindowSize
                         (Just
-                            { width = Basics.round <| viewport.viewport.width
-                            , height = Basics.round <| viewport.viewport.height
-                            }
+                            (WindowSize.apply
+                                (Basics.round viewport.viewport.width)
+                                (Basics.round viewport.viewport.height)
+                            )
                         )
 
                 Err _ ->

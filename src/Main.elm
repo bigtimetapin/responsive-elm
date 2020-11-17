@@ -8,6 +8,7 @@ import Element.Background as Background
 import Element.Font as Font
 import Html exposing (Html)
 import Model.Model as Model exposing (Model)
+import Model.Orientation as Orientation
 import Model.WindowSize exposing (WindowSize)
 import Msg.Msg exposing (Msg(..))
 import State.State exposing (State(..))
@@ -67,6 +68,7 @@ elementView model =
                     [ Element.text "Big Time Tap In"
                     , Element.text ("Width: " ++ viewWindowDimension model (\ws -> ws.width))
                     , Element.text ("Height: " ++ viewWindowDimension model (\ws -> ws.height))
+                    , Element.text ("Orientation: " ++ viewOrientation model)
                     ]
                 )
 
@@ -76,6 +78,16 @@ viewWindowDimension model f =
     case Maybe.map f model.windowSize of
         Just int ->
             String.fromInt int
+
+        Nothing ->
+            "Could not detect val"
+
+
+viewOrientation : Model -> String
+viewOrientation model =
+    case model.windowSize of
+        Just ws ->
+            Orientation.toString ws.orientation
 
         Nothing ->
             "Could not detect val"
