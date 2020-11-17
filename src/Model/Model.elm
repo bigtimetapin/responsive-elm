@@ -22,8 +22,8 @@ init =
                 Ok viewport ->
                     NewWindowSize
                         (Just
-                            { width = viewport.viewport.width
-                            , height = viewport.viewport.height
+                            { width = Basics.round <| viewport.viewport.width
+                            , height = Basics.round <| viewport.viewport.height
                             }
                         )
 

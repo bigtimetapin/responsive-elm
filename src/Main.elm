@@ -11,6 +11,7 @@ import Model.Model as Model exposing (Model)
 import Model.WindowSize exposing (WindowSize)
 import Msg.Msg exposing (Msg(..))
 import State.State exposing (State(..))
+import Sub.Sub as Sub
 
 
 main : Program () Model Msg
@@ -19,7 +20,7 @@ main =
         { init = init
         , view = view
         , update = update
-        , subscriptions = \_ -> Sub.none
+        , subscriptions = \_ -> Sub.onResize
         }
 
 
@@ -70,11 +71,11 @@ elementView model =
                 )
 
 
-viewWindowDimension : Model -> (WindowSize -> Float) -> String
+viewWindowDimension : Model -> (WindowSize -> Int) -> String
 viewWindowDimension model f =
     case Maybe.map f model.windowSize of
-        Just float ->
-            String.fromFloat float
+        Just int ->
+            String.fromInt int
 
         Nothing ->
             "Could not detect val"
