@@ -1,9 +1,13 @@
-# elm-package generated files
-elm-stuff
-# elm-repl generated files
-repl-temp-*
-# intelliJ
+secrets.tfvars
+.terraform
 .idea
 *.iml
-# dev
+
+# dev build
 index.html
+!assets/index.html
+
+# elm build artifacts
+elm-stuff/
+dist/
+assets/elm.min.js
