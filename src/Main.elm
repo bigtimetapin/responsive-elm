@@ -51,7 +51,7 @@ view model =
                 [ class "hero has-background-grey-lighter is-fullheight"
                 ]
                 [ Html.div
-                    [ class "hero-body has-text-centered"
+                    [ class "hero-body has-text-centered is-family-secondary"
                     ]
                     [ Html.div
                         [ class "container is-fluid"
