@@ -3,10 +3,8 @@ module Main exposing (main)
 -- MAIN
 
 import Browser
-import Element exposing (Element)
-import Element.Background as Background
-import Element.Font as Font
 import Html exposing (Html)
+import Html.Attributes exposing (class)
 import Model.Model as Model exposing (Model)
 import Model.Orientation as Orientation
 import Model.WindowSize exposing (WindowSize)
@@ -47,30 +45,44 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    Element.layout [] (elementView model)
-
-
-elementView : Model -> Element Msg
-elementView model =
     case model.state of
         LandingPage ->
-            Element.el
-                [ Element.width Element.fill
-                , Element.height Element.fill
-                , Background.color (Element.rgb255 135 206 250)
+            Html.section
+                [ class "hero has-background-grey-lighter is-fullheight"
                 ]
-                (Element.column
-                    [ Element.centerX
-                    , Element.centerY
-                    , Font.color (Element.rgb255 255 255 255)
-                    , Font.size 100
+                [ Html.div
+                    [ class "hero-body has-text-centered"
                     ]
-                    [ Element.text "Big Time Tap In"
-                    , Element.text ("Width: " ++ viewWindowDimension model (\ws -> ws.width))
-                    , Element.text ("Height: " ++ viewWindowDimension model (\ws -> ws.height))
-                    , Element.text ("Orientation: " ++ viewOrientation model)
+                    [ Html.div
+                        [ class "container is-fluid"
+                        ]
+                        [ Html.div
+                            [ class "columns is-mobile is-centered is-multiline"
+                            ]
+                            [ Html.div
+                                [ class "column is-4"
+                                ]
+                                [ Html.text ("Width: " ++ viewWindowDimension model .width)
+                                ]
+                            , Html.div
+                                [ class "column is-4"
+                                ]
+                                [ Html.text ("Height: " ++ viewWindowDimension model .height)
+                                ]
+                            , Html.div
+                                [ class "column is-8-mobile"
+                                ]
+                                [ Html.text ("Orientation: " ++ viewOrientation model)
+                                ]
+                            ]
+                        ]
                     ]
-                )
+                , Html.div
+                    [ class "hero-foot has-text-centered"
+                    ]
+                    [ Html.text "footer"
+                    ]
+                ]
 
 
 viewWindowDimension : Model -> (WindowSize -> Int) -> String
