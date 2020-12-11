@@ -1,9 +1,9 @@
 module Model.Model exposing (Model, init)
 
 import Browser.Dom
+import Model.State exposing (State(..))
 import Model.WindowSize as WindowSize exposing (WindowSize)
 import Msg.Msg exposing (Msg(..))
-import State.State exposing (State(..))
 import Task
 
 

@@ -7,9 +7,9 @@ import Html exposing (Html)
 import Html.Attributes exposing (class)
 import Model.Model as Model exposing (Model)
 import Model.Orientation as Orientation
+import Model.State exposing (State(..))
 import Model.WindowSize exposing (WindowSize)
 import Msg.Msg exposing (Msg(..))
-import State.State exposing (State(..))
 import Sub.Sub as Sub
 
 
