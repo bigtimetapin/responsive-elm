@@ -1,7 +1,17 @@
-module Msg.Msg exposing (Msg(..))
+module Msg.Msg exposing (Msg(..), resetViewport)
 
-import Model.WindowSize exposing (WindowSize)
+import Browser
+import Browser.Dom as Dom
+import Task
+import Url
 
 
 type Msg
-    = NewWindowSize (Maybe WindowSize)
+    = NoOp
+    | UrlChanged Url.Url
+    | LinkClicked Browser.UrlRequest
+
+
+resetViewport : Cmd Msg
+resetViewport =
+    Task.perform (\_ -> NoOp) (Dom.setViewport 0 0)

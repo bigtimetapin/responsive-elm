@@ -3,29 +3,27 @@ module Main exposing (main)
 -- MAIN
 
 import Browser
-import Html exposing (Html)
-import Html.Attributes exposing (class)
+import Browser.Navigation as Nav
 import Model.Model as Model exposing (Model)
-import Model.Orientation as Orientation
-import Model.State exposing (State(..))
-import Model.WindowSize exposing (WindowSize)
-import Msg.Msg exposing (Msg(..))
+import Model.State as State exposing (State(..))
+import Msg.Msg exposing (Msg(..), resetViewport)
 import Sub.Sub as Sub
+import Url
+import View.About.About
+import View.Error.Error
+import View.LandingPage.LandingPage
 
 
 main : Program () Model Msg
 main =
-    Browser.element
-        { init = init
+    Browser.application
+        { init = Model.init
         , view = view
         , update = update
-        , subscriptions = \_ -> Sub.onResize
+        , subscriptions = \_ -> Sub.subs
+        , onUrlChange = UrlChanged
+        , onUrlRequest = LinkClicked
         }
-
-
-init : () -> ( Model, Cmd Msg )
-init _ =
-    Model.init
 
 
 
@@ -35,71 +33,46 @@ init _ =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        NewWindowSize windowSize ->
-            ( { model | windowSize = windowSize }, Cmd.none )
+        NoOp ->
+            ( model, Cmd.none )
+
+        UrlChanged url ->
+            ( { model
+                | state = State.parse url
+                , url = url
+              }
+            , resetViewport
+            )
+
+        LinkClicked urlRequest ->
+            case urlRequest of
+                Browser.Internal url ->
+                    ( model, Nav.pushUrl model.key (Url.toString url) )
+
+                Browser.External href ->
+                    ( model, Nav.load href )
 
 
 
 -- VIEW
 
 
-view : Model -> Html Msg
+view : Model -> Browser.Document Msg
 view model =
-    case model.state of
-        LandingPage ->
-            Html.section
-                [ class "hero has-background-grey-lighter is-fullheight"
-                ]
-                [ Html.div
-                    [ class "hero-body has-text-centered is-family-secondary"
-                    ]
-                    [ Html.div
-                        [ class "container is-fluid"
-                        ]
-                        [ Html.div
-                            [ class "columns is-mobile is-centered is-multiline"
-                            ]
-                            [ Html.div
-                                [ class "column is-4"
-                                ]
-                                [ Html.text ("Width: " ++ viewWindowDimension model .width)
-                                ]
-                            , Html.div
-                                [ class "column is-4"
-                                ]
-                                [ Html.text ("Height: " ++ viewWindowDimension model .height)
-                                ]
-                            , Html.div
-                                [ class "column is-8-mobile"
-                                ]
-                                [ Html.text ("Orientation: " ++ viewOrientation model)
-                                ]
-                            ]
-                        ]
-                    ]
-                , Html.div
-                    [ class "hero-foot has-text-centered"
-                    ]
-                    [ Html.text "footer"
-                    ]
-                ]
+    let
+        html =
+            case model.state of
+                LandingPage ->
+                   View.LandingPage.LandingPage.view
 
+                About ->
+                    View.About.About.view
 
-viewWindowDimension : Model -> (WindowSize -> Int) -> String
-viewWindowDimension model f =
-    case Maybe.map f model.windowSize of
-        Just int ->
-            String.fromInt int
-
-        Nothing ->
-            "Could not detect val"
-
-
-viewOrientation : Model -> String
-viewOrientation model =
-    case model.windowSize of
-        Just ws ->
-            Orientation.toString ws.orientation
-
-        Nothing ->
-            "Could not detect val"
+                Error error ->
+                    View.Error.Error.view error
+    in
+    { title = "Responsive Elm"
+    , body =
+        [ html
+        ]
+    }
