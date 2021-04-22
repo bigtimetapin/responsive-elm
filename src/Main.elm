@@ -63,7 +63,7 @@ view model =
         html =
             case model.state of
                 LandingPage ->
-                   View.LandingPage.LandingPage.view
+                    View.LandingPage.LandingPage.view
 
                 About ->
                     View.About.About.view
